@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>realme Competitor Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--y:#FFC915;--k:#111;--bg:#fff;--card:#f5f5f2;--tx:#111;--mut:#6b6b66;--ln:#e3e3dc}
+@media(prefers-color-scheme:dark){:root{--bg:#141414;--card:#1f1f1f;--tx:#f4f4f0;--mut:#9a9a94;--ln:#333}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Sora,system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+header{background:var(--y);color:#111;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:26px;letter-spacing:-1px}
+.logo i{font-style:normal;background:#111;color:var(--y);padding:0 6px;border-radius:6px;margin-right:2px}
+nav button{font:600 14px Sora;border:2px solid #111;background:transparent;color:#111;padding:8px 18px;border-radius:99px;cursor:pointer;margin-left:6px}
+nav button.on{background:#111;color:var(--y)}
+nav button:focus-visible,input:focus-visible,select:focus-visible,.go:focus-visible{outline:3px solid #111;outline-offset:2px}
+.hero{background:var(--k);color:#fff;padding:36px 20px 44px}
+.hero h1{margin:0;font-size:clamp(28px,6vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;max-width:720px}
+.hero h1 b{color:var(--y)}
+.hero p{color:#bbb;max-width:520px;margin:12px 0 0}
+main{max-width:980px;margin:-24px auto 60px;padding:0 16px}
+section{background:var(--bg);border:1px solid var(--ln);border-radius:20px;padding:24px}
+.hide{display:none}
+h2{margin:0 0 16px;font-size:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+input,select{width:100%;font:400 15px Sora;padding:11px 12px;border:1.5px solid var(--ln);border-radius:12px;background:var(--card);color:var(--tx)}
+input:focus,select:focus{border-color:var(--y)}
+.brand{border:1.5px solid var(--ln);border-radius:16px;padding:14px;margin-top:12px;background:var(--card)}
+.brand h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.go{width:100%;margin-top:22px;font:800 16px Sora;background:var(--y);color:#111;border:0;border-radius:14px;padding:15px;cursor:pointer}
+.go:disabled{opacity:.6}
+.msg{margin-top:12px;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--card);border-radius:14px;padding:12px 14px;border-left:6px solid}
+.kpi small{color:var(--mut)}.kpi b{display:block;font-size:26px;letter-spacing:-1px}
+.bar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+.bar span:first-child{width:70px;font-weight:600}
+.bar div{height:22px;border-radius:6px;min-width:2px}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.tw{overflow-x:auto;margin-top:18px}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:8px 10px;border-bottom:1px solid var(--ln);text-align:left}
+th{background:var(--card)}
+.bar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.bar-row>div{flex:1;min-width:140px}
+.sm{font:600 13px Sora;padding:11px 16px;border-radius:12px;border:0;background:var(--k);color:var(--y);cursor:pointer}
+.note{background:#fff6d1;color:#111;border-radius:12px;padding:10px 14px;font-size:13px;margin-bottom:14px}
+@media(max-width:640px){.g2,.bars{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i>real</i>me</div>
+  <nav><button id="t1" class="on">Input Data</button><button id="t2">Dashboard</button></nav>
+</header>
+<div class="hero">
+  <h1>Pantau kompetitor, <b>menangkan toko.</b></h1>
+  <p>Promotor isi rekap jumlah SA dan SO semua brand tiap bulan. Tim realme langsung lihat hasilnya.</p>
+</div>
+
+<main>
+<section id="v1">
+  <div id="demo" class="note hide">Mode demo: data tersimpan di browser ini saja. Isi <code>API_URL</code> di file untuk menyimpan ke Google Sheets.</div>
+  <h2>Form rekap bulanan</h2>
+  <div class="g2">
+    <div><label for="month">Bulan</label><input type="month" id="month" required></div>
+    <div><label for="arm">Nama ARM / FT</label><input id="arm" required></div>
+    <div><label for="sa">Nama SA</label><input id="sa" required></div>
+    <div><label for="code">SA Personal Code</label><input id="code" required></div>
+  </div>
+  <div style="margin-top:14px"><label for="store">Nama Toko</label><input id="store" required></div>
+  <div id="brands"></div>
+  <button class="go" id="send">Kirim data</button>
+  <div class="msg" id="msg" role="status"></div>
+</section>
+
+<section id="v2" class="hide">
+  <h2>Dashboard kompetitor</h2>
+  <div class="bar-row">
+    <div><label for="pin">Kode akses</label><input type="password" id="pin"></div>
+    <div><label for="fm">Bulan</label><select id="fm"><option value="">Semua bulan</option></select></div>
+    <button class="sm" id="load">Muat data</button>
+  </div>
+  <div class="msg" id="dmsg" role="status"></div>
+  <div id="dash" class="hide">
+    <div class="kpis" id="kpis"></div>
+    <div class="bars">
+      <div><h2>Total jumlah SA</h2><div id="b1"></div></div>
+      <div><h2>Total jumlah SO</h2><div id="b2"></div></div>
+    </div>
+    <div class="tw"><table id="tb"></table></div>
+    <button class="sm" id="csv" style="margin-top:14px">Unduh CSV</button>
+  </div>
+</section>
+</main>
+
+<script>
+// GANTI dengan URL Web App Google Apps Script kamu. Kosong = mode demo (localStorage).
+const API_URL = "https://script.google.com/macros/s/AKfycbw8eWvgxuD4AXeW-lvrMkxbZSVDHEUfZ3rzfTkZ5BdytnSXv6wDiJOB8GKyPQ1bJdxckQ/exec";
+
+const BR = [
+  ["realme","#FFC915"],["OPPO","#1E8E5A"],["VIVO","#3B6CF6"],
+  ["XIAOMI","#FF6900"],["SAMSUNG","#1428A0"],["Infinix","#7B3FE4"]
+];
+const $ = id => document.getElementById(id);
+const key = b => b.toLowerCase();
+if(!API_URL) $("demo").classList.remove("hide");
+
+$("brands").innerHTML = BR.map(([n,c],i)=>`
+ <div class="brand"><h3><span class="dot" style="background:${c}"></span>${i+1}. ${n}</h3>
+ <div class="g2">
+  <div><label for="${key(n)}_sa">SA Qty</label><input type="number" min="0" inputmode="numeric" id="${key(n)}_sa" required></div>
+  <div><label for="${key(n)}_pr">Jumlah SO</label><input type="number" min="0" step="1" inputmode="numeric" id="${key(n)}_pr" required></div>
+ </div></div>`).join("");
+$("month").value = new Date().toISOString().slice(0,7);
+
+function tab(n){
+  $("v1").classList.toggle("hide",n!==1);$("v2").classList.toggle("hide",n!==2);
+  $("t1").classList.toggle("on",n===1);$("t2").classList.toggle("on",n===2);
+}
+$("t1").onclick=()=>tab(1);$("t2").onclick=()=>tab(2);
+
+$("send").onclick = async () => {
+  const ids=["month","arm","sa","code","store"];
+  const d={};
+  for(const i of ids){ d[i]=$(i).value.trim(); if(!d[i]) return say("msg","Lengkapi semua kolom dulu.",1); }
+  for(const [n] of BR){
+    const a=$(key(n)+"_sa").value, p=$(key(n)+"_pr").value;
+    if(a===""||p==="") return say("msg","Isi SA Qty dan Jumlah SO untuk "+n+".",1);
+    d[key(n)+"_sa"]=+a; d[key(n)+"_pr"]=+p;
+  }
+  $("send").disabled=true; say("msg","Mengirim...");
+  try{
+    if(API_URL){
+      await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(d)});
+    } else {
+      const all=JSON.parse(localStorage.getItem("rm")||"[]"); all.push(d);
+      localStorage.setItem("rm",JSON.stringify(all));
+    }
+    say("msg","Data terkirim. Terima kasih!");
+    ["sa","code"].forEach(i=>$(i).value="");
+    BR.forEach(([n])=>{$(key(n)+"_sa").value="";$(key(n)+"_pr").value=""});
+  }catch(e){ say("msg","Gagal mengirim. Cek koneksi lalu coba lagi.",1); }
+  $("send").disabled=false;
+};
+function say(id,t,err){const e=$(id);e.textContent=t;e.style.color=err?"#d33":"inherit";}
+
+let DATA=[];
+$("load").onclick = async () => {
+  say("dmsg","Memuat...");
+  try{
+    if(API_URL){
+      const r=await fetch(API_URL+"?key="+encodeURIComponent($("pin").value));
+      const j=await r.json();
+      if(j.error) return say("dmsg","Kode akses salah.",1);
+      DATA=j.rows;
+    } else DATA=JSON.parse(localStorage.getItem("rm")||"[]");
+  }catch(e){return say("dmsg","Gagal memuat data.",1);}
+  const ms=[...new Set(DATA.map(r=>r.month))].sort().reverse();
+  const cur=$("fm").value;
+  $("fm").innerHTML='<option value="">Semua bulan</option>'+ms.map(m=>`<option ${m===cur?"selected":""}>${m}</option>`).join("");
+  say("dmsg",DATA.length?"":"Belum ada data untuk ditampilkan.");
+  render();
+};
+$("fm").onchange=render;
+
+function render(){
+  const m=$("fm").value, rows=DATA.filter(r=>!m||r.month===m);
+  $("dash").classList.toggle("hide",!rows.length);
+  if(!rows.length) return;
+  const st=BR.map(([n,c])=>{
+    const k=key(n), sa=rows.reduce((s,r)=>s+(+r[k+"_sa"]||0),0),
+      pr=rows.reduce((s,r)=>s+(+r[k+"_pr"]||0),0);
+    return {n,c,sa,so:pr};
+  });
+  $("kpis").innerHTML=`<div class="kpi" style="border-color:#111"><small>Laporan masuk</small><b>${rows.length}</b></div>`+
+    st.map(s=>`<div class="kpi" style="border-color:${s.c}"><small>${s.n}</small><b>${s.sa} SA</b></div>`).join("");
+  const bar=(k)=>{const mx=Math.max(...st.map(s=>s[k]),1);
+    return st.map(s=>`<div class="bar"><span>${s.n}</span><div style="width:${s[k]/mx*100*0.62}%;background:${s.c}"></div><span style="width:auto">${s[k]}</span></div>`).join("");};
+  $("b1").innerHTML=bar("sa");$("b2").innerHTML=bar("so");
+  const h=["Bulan","ARM/FT","SA","Kode","Toko",...BR.flatMap(([n])=>[n+" SA",n+" SO"])];
+  $("tb").innerHTML="<tr>"+h.map(x=>`<th>${x}</th>`).join("")+"</tr>"+
+    rows.map(r=>"<tr>"+[r.month,r.arm,r.sa,r.code,r.store,...BR.flatMap(([n])=>[r[key(n)+"_sa"],r[key(n)+"_pr"]])]
+    .map(x=>`<td>${String(x).replace(/</g,"&lt;")}</td>`).join("")+"</tr>").join("");
+  $("csv").onclick=()=>{
+    const t=[h,...rows.map(r=>[r.month,r.arm,r.sa,r.code,r.store,...BR.flatMap(([n])=>[r[key(n)+"_sa"],r[key(n)+"_pr"]])])]
+      .map(a=>a.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/csv"}));
+    a.download="rekap-kompetitor.csv";a.click();
+  };
+}
+</script>
+</body>
+</html>
